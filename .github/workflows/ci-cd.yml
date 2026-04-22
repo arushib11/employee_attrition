@@ -22,7 +22,7 @@ jobs:
         pip install -r requirements.txt
     - name: Run tests
       run: |
-        pytest tests/ --cov=src --cov-report=xml
+        PYTHONPATH=$PWD/src pytest tests/ -v --tb=short
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
@@ -48,7 +48,7 @@ jobs:
         dvc pull  # Get the dataset
     - name: Train model
       run: |
-        python src/train.py
+        PYTHONPATH=$PWD/src python src/train.py
     - name: Validate model performance
       run: |
         # Check if training succeeded and model met thresholds
