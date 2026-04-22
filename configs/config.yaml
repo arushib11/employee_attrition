@@ -1,0 +1,22 @@
+data:
+  raw_path: "data/employee_attrition.csv"
+  missing_percentage: 0.1
+
+model:
+  type: "random_forest"
+  hyperparameters:
+    n_estimators: 100
+    max_depth: 10
+    random_state: 42
+
+training:
+  test_size: 0.2
+  random_state: 42
+
+paths:
+  models: "models/"
+  mlruns: "mlruns/"
+
+thresholds:
+  min_accuracy: 0.75
+  min_f1: 0.70
