@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 
 # Add src directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from data_preprocessing import load_data, introduce_missing_values, preprocess_data
 
@@ -140,7 +140,7 @@ def analyze_drift_results(drift_results, threshold=0.1):
     drifted_count = drift_results['drifted_features_count']
     drifted_features = drift_results['drifted_features']
 
-    print(".3f")
+    print(f"📉 Dataset Drift Share: {drift_share:.3f}")
     print(f"📈 Drifted Features: {drifted_count}")
 
     if drifted_features:

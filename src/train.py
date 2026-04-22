@@ -10,6 +10,11 @@ This script orchestrates the complete MLOps pipeline:
 """
 
 import sys
+import os
+
+# Ensure src directory is in path for imports
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import yaml
 from data_preprocessing import load_config, load_data, introduce_missing_values, preprocess_data
 from model_training import train_model, evaluate_model
@@ -68,7 +73,7 @@ def main():
     metrics, report = evaluate_model(model, X_test, y_test)
     print("📊 Model Performance:")
     for metric, value in metrics.items():
-        print(".3f")
+        print(f"- {metric.capitalize()}: {value:.3f}")
     print("\nDetailed Classification Report:")
     print(report)
 

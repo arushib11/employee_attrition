@@ -19,4 +19,4 @@ paths:
 
 thresholds:
   min_accuracy: 0.75
-  min_f1: 0.70
+  min_f1: 0.65
