@@ -50,13 +50,18 @@ jobs:
         pip install -r requirements.txt
     - name: Set up DVC
       run: dvc pull || echo "⚠️ DVC pull failed, using local data if available"
+    - name: Ensure training dataset
+      run: |
+        # CSV is gitignored and tracked by DVC; the default remote is a local path,
+        # so `dvc pull` usually cannot restore data in GitHub Actions. Fetch the
+        # same IBM HR Attrition dataset when the file is still missing.
+        if [ ! -f "data/employee_attrition.csv" ]; then
+          echo "Dataset missing after DVC pull; downloading IBM HR Attrition CSV..."
+          mkdir -p data
+          curl -fsSL -o data/employee_attrition.csv \
+            "https://raw.githubusercontent.com/IBM/employee-attrition-aif360/master/data/emp_attrition.csv"
+        fi
+        test -f "data/employee_attrition.csv"
     - name: Train and Validate Model
       run: |
-        # Ensure data exists before running script to avoid 255 crash
-        if [ ! -f "data/employee_attrition.csv" ]; then
-          echo "❌ Error: Dataset data/employee_attrition.csv not found."
-          echo "Make sure data is committed to Git or DVC remote is configured."
-          exit 1
-        fi
-        
         PYTHONPATH=$PWD/src python src/train.py

@@ -16,6 +16,7 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import yaml
+import numpy as np
 from data_preprocessing import load_config, load_data, introduce_missing_values, preprocess_data
 from model_training import train_model, evaluate_model
 
@@ -51,6 +52,8 @@ def main():
 
     # Load and preprocess data
     print("📊 Loading and preprocessing data...")
+    rs = config["training"]["random_state"]
+    np.random.seed(rs)
     df = load_data(config['data']['raw_path'])
     df = introduce_missing_values(df, percentage=config['data']['missing_percentage'])
     X_train, X_test, y_train, y_test = preprocess_data(
@@ -87,8 +90,11 @@ def main():
     # Log experiment
     if MLFLOW_AVAILABLE:
         print("📝 Logging experiment to MLflow...")
-        log_experiment(model, metrics, config)
-        print("✅ Experiment logged successfully")
+        try:
+            log_experiment(model, metrics, config)
+            print("✅ Experiment logged successfully")
+        except Exception as exc:
+            print(f"⚠️  MLflow logging failed (training still succeeded): {exc}")
     else:
         print("📝 Skipping MLflow logging (not available)")
 
