@@ -17,6 +17,32 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from data_preprocessing import load_data, introduce_missing_values, preprocess_data
 
+def preprocess_production_like_reference(reference_raw: pd.DataFrame, production_raw: pd.DataFrame):
+    """
+    Preprocess production data using the same feature engineering as training,
+    then align one-hot columns to the reference feature set.
+    """
+    prod = production_raw.copy()
+    prod['Attrition'] = prod['Attrition'].map({'Yes': 1, 'No': 0}).astype(int)
+    X_prod = prod.drop('Attrition', axis=1)
+    y_prod = prod['Attrition']
+
+    # Fill missing values consistently (use production mean as a simple proxy)
+    if 'Age' in X_prod.columns:
+        mean_age = X_prod['Age'].mean()
+        X_prod['Age'] = X_prod['Age'].fillna(mean_age)
+
+    # Encode categoricals
+    categorical_cols = X_prod.select_dtypes(include=['object']).columns
+    X_prod = pd.get_dummies(X_prod, columns=categorical_cols, drop_first=True)
+
+    # Build reference feature set (from raw reference, using existing pipeline)
+    X_ref, _, _, _ = preprocess_data(reference_raw, test_size=0.2, random_state=42)
+
+    # Align columns
+    X_prod = X_prod.reindex(columns=X_ref.columns, fill_value=0)
+    return X_prod, y_prod
+
 def create_simulated_production_data(reference_data, n_samples=500, drift_features=None):
     """
     Create simulated production data with potential drift.
@@ -204,12 +230,8 @@ def main():
     drift_features = ['Age', 'MonthlyIncome', 'YearsAtCompany', 'JobSatisfaction']
     production_raw = create_simulated_production_data(reference_raw, n_samples=300, drift_features=drift_features)
 
-    # Preprocess production data
-    X_prod, _, y_prod, _ = preprocess_data(
-        production_raw,
-        test_size=0,  # Use all data for production
-        random_state=config['training']['random_state']
-    )
+    # Preprocess production data (no train/test split; align to reference feature space)
+    X_prod, y_prod = preprocess_production_like_reference(reference_raw, production_raw)
 
     # Combine features and target
     production_data = X_prod.copy()

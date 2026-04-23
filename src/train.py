@@ -19,6 +19,7 @@ import yaml
 import numpy as np
 from data_preprocessing import load_config, load_data, introduce_missing_values, preprocess_data
 from model_training import train_model, evaluate_model
+from utils import get_project_root, get_dvc_data_md5
 
 try:
     from model_training import log_experiment
@@ -91,7 +92,10 @@ def main():
     if MLFLOW_AVAILABLE:
         print("📝 Logging experiment to MLflow...")
         try:
-            log_experiment(model, metrics, config)
+            project_root = get_project_root()
+            data_dvc_path = os.path.join(project_root, "data", "employee_attrition.csv.dvc")
+            data_version = get_dvc_data_md5(data_dvc_path) or "unknown"
+            log_experiment(model, metrics, config, data_version=data_version)
             print("✅ Experiment logged successfully")
         except Exception as exc:
             print(f"⚠️  MLflow logging failed (training still succeeded): {exc}")

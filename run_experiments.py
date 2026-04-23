@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from data_preprocessing import load_config, load_data, introduce_missing_values, preprocess_data
 from model_training import train_model, evaluate_model
+from utils import get_project_root, get_dvc_data_md5
 
 def run_experiment(config, experiment_name, n_estimators, max_depth):
     """Run a single experiment with specified hyperparameters."""
@@ -45,7 +46,10 @@ def run_experiment(config, experiment_name, n_estimators, max_depth):
     # Log experiment (will be skipped if MLflow not available)
     try:
         from model_training import log_experiment
-        log_experiment(model, metrics, config, data_version="v1.0")
+        project_root = get_project_root()
+        data_dvc_path = os.path.join(project_root, "data", "employee_attrition.csv.dvc")
+        data_version = get_dvc_data_md5(data_dvc_path) or "unknown"
+        log_experiment(model, metrics, config, data_version=data_version, run_name=experiment_name)
         print("   ✅ Logged to MLflow")
     except ImportError:
         print("   ⚠️  MLflow not available - experiment not logged")

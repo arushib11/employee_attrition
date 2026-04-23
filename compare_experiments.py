@@ -101,8 +101,8 @@ def analyze_hyperparameter_impact():
             if len(est_f1) > 1:
                 est_f1['params.n_estimators'] = est_f1['params.n_estimators'].astype(int)
                 avg_by_est = est_f1.groupby('params.n_estimators')['metrics.f1'].mean()
-                print("
-Average F1-score by n_estimators:"                print(avg_by_est)
+                print("\nAverage F1-score by n_estimators:")
+                print(avg_by_est)
 
         # Analyze max_depth impact
         if 'params.max_depth' in runs.columns and 'metrics.f1' in runs.columns:
@@ -110,8 +110,8 @@ Average F1-score by n_estimators:"                print(avg_by_est)
             if len(depth_f1) > 1:
                 depth_f1['params.max_depth'] = depth_f1['params.max_depth'].astype(int)
                 avg_by_depth = depth_f1.groupby('params.max_depth')['metrics.f1'].mean()
-                print("
-Average F1-score by max_depth:"                print(avg_by_depth)
+                print("\nAverage F1-score by max_depth:")
+                print(avg_by_depth)
 
     except ImportError:
         pass  # MLflow not available
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     analyze_hyperparameter_impact()
 
     if best_run is not None:
-        print("
-✅ Experiment comparison complete!"        print(f"💡 Best model has F1-score: {best_run['F1-Score']:.3f}")
+        print("\n✅ Experiment comparison complete!")
+        print(f"💡 Best model has F1-score: {best_run['F1-Score']:.3f}")
     else:
         print("\n💡 Run some experiments first with 'python src/train.py'")

@@ -77,7 +77,17 @@ The dataset used is the IBM HR Analytics Employee Attrition & Performance datase
 4. **Set up DVC and pull data**:
    ```bash
    # Pull the dataset
-   dvc pull
+   # If your DVC remote is a public S3 bucket, use unsigned requests:
+   AWS_NO_SIGN_REQUEST=1 dvc pull
+   ```
+
+   If you want to use an S3 remote, make sure S3 support is installed:
+   ```bash
+   pip install "dvc[s3]==3.30.1"
+   ```
+   If `dvc push` complains about missing `boto3`, install it:
+   ```bash
+   pip install boto3
    ```
 
 5. **Optional: MLflow UI** (for experiment tracking):

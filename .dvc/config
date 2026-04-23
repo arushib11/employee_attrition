@@ -1,4 +1,5 @@
 [core]
     remote = myremote
 ['remote "myremote"']
-    url = ../../dvc_remote
+    url = s3://employee-attrition-s3/dvcstore
+    region = us-east-1

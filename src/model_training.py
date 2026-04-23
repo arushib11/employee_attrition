@@ -30,7 +30,7 @@ def evaluate_model(model, X_test, y_test):
     report = classification_report(y_test, y_pred)
     return metrics, report
 
-def log_experiment(model, metrics, config, data_version="v1.0"):
+def log_experiment(model, metrics, config, data_version="unknown", run_name=None):
     """Log experiment with MLflow."""
     try:
         import mlflow
@@ -40,7 +40,7 @@ def log_experiment(model, metrics, config, data_version="v1.0"):
         return
 
     mlflow.set_experiment("Employee Attrition")
-    with mlflow.start_run():
+    with mlflow.start_run(run_name=run_name):
         # Log hyperparameters
         mlflow.log_params(config['model']['hyperparameters'])
         mlflow.log_param("data_version", data_version)
