@@ -1,5 +1,6 @@
 import os
 import yaml
+from typing import Optional
 
 def ensure_directory(path):
     """Ensure a directory exists."""
@@ -9,7 +10,7 @@ def get_project_root():
     """Get the project root directory."""
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def get_dvc_data_md5(dvc_pointer_path: str) -> str | None:
+def get_dvc_data_md5(dvc_pointer_path: str) -> Optional[str]:
     """
     Return the md5 hash stored in a `.dvc` pointer file.
 
