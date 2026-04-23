@@ -44,7 +44,9 @@ def main():
     print("🚀 Starting Employee Attrition Training Pipeline")
 
     # Load configuration
-    config = load_config()
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    config_path = os.path.join(project_root, "configs", "config.yaml")
+    config = load_config(config_path)
     print("✅ Configuration loaded")
 
     # Load and preprocess data
