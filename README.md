@@ -50,7 +50,7 @@ The dataset used is the IBM HR Analytics Employee Attrition & Performance datase
 ## Setup
 
 ### Prerequisites
-- Python 3.8+
+- Python 3.9+ (CI uses 3.9; local dev tested with Python 3.12)
 - Git
 - pip
 
@@ -62,24 +62,28 @@ The dataset used is the IBM HR Analytics Employee Attrition & Performance datase
    cd employee_attrition
    ```
 
-2. **Install Python dependencies**:
+2. **Create a virtual environment (recommended)**:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   python -m pip install -U pip
+   ```
+
+3. **Install Python dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-3. **Set up DVC and pull data**:
+4. **Set up DVC and pull data**:
    ```bash
-   # Initialize DVC (if not already done)
-   dvc init
-
    # Pull the dataset
    dvc pull
    ```
 
-4. **Optional: Set up MLflow** (for experiment tracking):
+5. **Optional: MLflow UI** (for experiment tracking):
    ```bash
-   # MLflow will work automatically when installed
-   # UI available at: mlflow ui
+   # Start the UI (use python -m mlflow to ensure you use the venv's mlflow)
+   python -m mlflow ui --backend-store-uri "file:$(pwd)/mlruns"
    ```
 
 ## Usage
@@ -88,7 +92,7 @@ The dataset used is the IBM HR Analytics Employee Attrition & Performance datase
 
 **Single training run**:
 ```bash
-python src/train.py
+PYTHONPATH=$PWD/src python src/train.py
 ```
 
 **Run multiple experiments** (recommended for comparison):
@@ -105,7 +109,7 @@ python compare_experiments.py
 
 **Run the full test suite**:
 ```bash
-pytest tests/ -v
+PYTHONPATH=$PWD/src pytest tests/ -v
 ```
 
 **Run with coverage**:
@@ -226,9 +230,14 @@ dvc remote add -d myremote /path/to/remote
 dvc push
 ```
 
-**MLflow Not Available**:
-- Training still works, but experiment logging is skipped
-- Install MLflow: `pip install mlflow`
+**MLflow shows no runs**:
+- Make sure you ran training with MLflow installed (it should print `✅ Experiment logged successfully`)
+- Start the UI from the project root and point it to this repo's `mlruns/`:
+  `python -m mlflow ui --backend-store-uri "file:$(pwd)/mlruns"`
+- If port 5000 is busy, use `--port 5001`
+
+**`pip install -r requirements.txt` fails on macOS / Python 3.12+**:
+- Recreate the venv and re-run install. This repo pins versions with wheels for Python 3.12.
 
 **Tests Fail**:
 ```bash
