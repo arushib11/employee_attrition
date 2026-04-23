@@ -1,10 +1,10 @@
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
 import yaml
 import os
 from data_preprocessing import load_config, load_data, introduce_missing_values, preprocess_data
+from evaluation import evaluate_model
 
 def train_model(X_train, y_train, n_estimators=100, max_depth=10, random_state=42):
     """Train a RandomForest classifier."""
@@ -15,20 +15,6 @@ def train_model(X_train, y_train, n_estimators=100, max_depth=10, random_state=4
     )
     model.fit(X_train, y_train)
     return model
-
-def evaluate_model(model, X_test, y_test):
-    """Evaluate model and return multiple metrics."""
-    y_pred = model.predict(X_test)
-
-    metrics = {
-        'accuracy': accuracy_score(y_test, y_pred),
-        'precision': precision_score(y_test, y_pred, average='weighted'),
-        'recall': recall_score(y_test, y_pred, average='weighted'),
-        'f1': f1_score(y_test, y_pred, average='weighted')
-    }
-
-    report = classification_report(y_test, y_pred)
-    return metrics, report
 
 def log_experiment(model, metrics, config, data_version="unknown", run_name=None):
     """Log experiment with MLflow."""

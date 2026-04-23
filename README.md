@@ -23,7 +23,8 @@ The dataset used is the IBM HR Analytics Employee Attrition & Performance datase
 ├── src/
 │   ├── __init__.py
 │   ├── data_preprocessing.py    # Data loading and preprocessing
-│   ├── model_training.py        # Model training and evaluation
+│   ├── model_training.py        # Model training and MLflow logging
+│   ├── evaluation.py            # Shared evaluation metrics and reports
 │   ├── train.py                 # Main training orchestration script
 │   ├── monitor_drift.py         # Drift monitoring with Evidently
 │   └── utils.py                 # Utility functions

@@ -8,7 +8,8 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from data_preprocessing import load_data, introduce_missing_values, preprocess_data
-from model_training import train_model, evaluate_model
+from evaluation import evaluate_model
+from model_training import train_model
 
 class TestDataValidation:
     """Data validation tests to ensure dataset quality."""

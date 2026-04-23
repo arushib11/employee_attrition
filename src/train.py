@@ -18,7 +18,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import yaml
 import numpy as np
 from data_preprocessing import load_config, load_data, introduce_missing_values, preprocess_data
-from model_training import train_model, evaluate_model
+from evaluation import evaluate_model
+from model_training import train_model
 from utils import get_project_root, get_dvc_data_md5
 
 try:

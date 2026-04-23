@@ -7,7 +7,8 @@ from sklearn.ensemble import RandomForestClassifier
 # Add src directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
-from model_training import train_model, evaluate_model
+from evaluation import evaluate_model
+from model_training import train_model
 
 def test_train_model():
     # Mock data
