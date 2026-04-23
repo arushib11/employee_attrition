@@ -150,6 +150,7 @@ mlartifacts/
 # DVC
 .dvc/tmp/
 .dvc/cache/
+.dvc_site_cache/
 
 # Logs
 logs/
