@@ -27,6 +27,12 @@ jobs:
       uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
+#    - name: Upload coverage to Codecov
+#      uses: codecov/codecov-action@v4
+#      with:
+#        file: ./coverage.xml
+#        token: ${{ secrets.CODECOV_TOKEN }} # Required for v4+
+
 
   train:
     runs-on: ubuntu-latest
@@ -43,18 +49,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Set up DVC
+      run: dvc pull || echo "⚠️ DVC pull failed, using local data if available"
+    - name: Train and Validate Model
       run: |
-        pip install dvc
-        dvc pull  # Get the dataset
-    - name: Train model
-      run: |
-        PYTHONPATH=$PWD/src python src/train.py
-    - name: Validate model performance
-      run: |
-        # Check if training succeeded and model met thresholds
-        if [ $? -eq 0 ]; then
-          echo "✅ Model training and validation successful"
-        else
-          echo "❌ Model validation failed - performance below threshold"
+        # Ensure data exists before running script to avoid 255 crash
+        if [ ! -f "data/employee_attrition.csv" ]; then
+          echo "❌ Error: Dataset data/employee_attrition.csv not found."
+          echo "Make sure data is committed to Git or DVC remote is configured."
           exit 1
         fi
+        
+        PYTHONPATH=$PWD/src python src/train.py
