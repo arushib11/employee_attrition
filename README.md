@@ -59,7 +59,7 @@ The dataset used is the IBM HR Analytics Employee Attrition & Performance datase
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/employee_attrition.git
+   git clone https://github.com/arushib11/employee_attrition.git
    cd employee_attrition
    ```
 
